@@ -1,9 +1,9 @@
 # Auctions and Electronic Markets
 
-This is a repo for the EBC2091 course at Maastricht University.
+This is a repo for the [EBC2091 course at Maastricht University](https://www.maastrichtuniversity.nl/meta/368514/auctions-and-electronic-markets).
 
 ## Links to notes
-* [Session 1](Session\ 1/)
+* [Session 1](Session\ 1/notes.pdf)
 * [Session 2]()
 * Session 3
 * Session 4
