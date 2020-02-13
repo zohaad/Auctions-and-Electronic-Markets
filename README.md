@@ -5,7 +5,7 @@ This is a repo for the [EBC2091 course at Maastricht University](https://www.maa
 ## Links to notes
 * [Session 1](Session%201/notes.pdf)
 * [Session 2](Session%202/notes.pdf)
-* Session 3
+* [Session 3](Session%203/notes.pdf)
 * Session 4
 * Session 5
 * Session 6
