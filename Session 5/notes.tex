@@ -1,0 +1,340 @@
+\documentclass{article}
+\usepackage[a4paper,left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+
+\title{Session 5}
+\author{Zohaad Fazal}
+\date{February 2020}
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usetkzobj{all}
+\usepackage{cancel}
+\usepackage{caption}
+\usepackage{textcomp}
+\usepackage{eurosym}
+
+% derivative symbol
+\renewcommand{\d}[1]{\ensuremath{\operatorname{d}\!{#1}}}
+
+\usetikzlibrary{calc,intersections,through,backgrounds,matrix,patterns}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\tikzset{
+    hatch distance/.store in=\hatchdistance,
+    hatch distance=10pt,
+    hatch thickness/.store in=\hatchthickness,
+    hatch thickness=0.3pt
+}
+
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{northeast}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{northwest}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{\hatchdistance}{0pt}}
+    \pgfpathlineto{\pgfqpoint{0pt}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+
+
+
+% derivative symbol
+\renewcommand{\d}[1]{\ensuremath{\operatorname{d}\!{#1}}}
+
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+
+\begin{document}
+\maketitle
+\section*{0\quad Topics}
+\begin{enumerate}
+    \item VCG (Vickrey-Clarke-Groves) Mechanism
+    \item Competitive Equilibrium and the Welfare Theorem
+\end{enumerate}
+
+\section*{1\quad VCG Mechanism}
+\subsection*{Economics}
+$N=\{1,\dots,n\}$: set of agents\\
+$A$: set of allocations
+\begin{equation*}
+    v_i:A\to\mathbb{R}\quad\text{for all }i
+\end{equation*}
+For $a\in A$, $v_i(a)$ is the valuation agent $i$ assigns to allocation $a$.\\
+
+\noindent
+Assume quasi-linear utility.\\
+\noindent
+\textbf{Task:} Choose $a^*\in A$ such that
+\begin{equation*}
+    \sum_{i\in N}v_i(a^*)\geq\sum_{i\in N}v_i(a)\quad\text{for all }a\in A.
+\end{equation*}
+This is TU maximization.\\
+
+\noindent
+Assume private information: each agent knows only their own valuation, auctioneer knows none of the valuations.\\
+
+\noindent
+\textbf{Question:} Can we design or construct a
+\begin{itemize}
+    \item market
+    \item auction
+    \item trading platform
+\end{itemize}
+such that, \textit{in equilibrium}, allocation is efficient? (TU is maximized)\\
+
+\noindent
+\textbf{Answer:} yes.
+\subsection*{VCG}
+\subsubsection*{(1)\quad Strategies}
+One shot $\equiv$ sealed bid.\\
+
+\noindent
+Each agent $i$ submits report $r_i:A\to\mathbb{R}$. (reported valuation)
+\subsubsection*{(2)\quad Allocation}
+Choose allocation $b^*\in A$, such that
+\begin{equation*}
+    \sum_{i\in N}r_i(b^*)\geq\sum_{i\in N}r_i(b)\quad\text{for all }b\in A.
+\end{equation*}
+This maximizes total reported valuation.
+\subsubsection*{(3)\quad Payments (with Externality)}
+Externality: damage you inflict by participating; like throwing a party at 3AM and waking the whole neighborhood.\\
+
+\noindent
+Agent $i$ is going to pay
+\begin{equation*}
+    p_i=\underbrace{\sum_{j\neq i}r_j(b^{**})}_{\text{TU if you're not there}}-\underbrace{\sum_{j\neq i}r_j(b^*)}_{\text{what the others currently get}}
+\end{equation*}
+
+where
+\begin{equation*}
+    b^{**}=\argmax_{b\in A}\sum_{j\neq i}r_j(b).
+\end{equation*}
+
+\subsection*{Theorem}
+In the VCG mechanism, reporting truthfully, so $r_i=v_i$, is a dominant strategy. In the resulting DSE, allocation is efficient.\\
+
+\noindent
+\textit{Proof:} 2\textsuperscript{nd} statement is obvious, only prove the 1\textsuperscript{st} statement.\\
+
+\noindent
+Consider agent $i$, other agents' reports $(r_j)_{j\neq i}$. Take report $r_i$ of agent $i$ knowing $v_i$.
+\begin{equation*}
+    \begin{aligned}
+    u_i(b^*)&=v_i(b^*)-p_i\\
+    &=v_i(b^*)-\left[\sum_{j\neq i}r_j(b^{**})-\sum_{j\neq i}r_j(b^*)\right]\\
+    &=\underbrace{v_i(b^*)+\sum_{j\neq i}r_j(b^*)}_{b^* \text{ depends on }r_i}-\underbrace{\sum_{j\neq i}r_j(b^{**})}_{\text{does not depend on }r_i}
+    \end{aligned}
+\end{equation*}\\
+
+\noindent
+The mechanism is going to pick a $b^*$ such that $r_i(b^*)+\sum_{j\neq i}r_j(b^*)$ is maximal.\\
+
+\noindent
+Agent $i$ wants to maximize $v_i(b^*)+\sum_{j\neq i}r_j(b^*)$, this is done via choosing $r_i=v_i$. \ensuremath{\square}
+
+\subsection*{Usage in practice}
+This is not used in real life, why? Suppose there are 10 bidders and 100 regional licenses (e.g. mobile telephone companies bidding for regional network licenses).\\
+
+\noindent
+There are $10^{100}$ possible allocations, so in VCG every company has to report $10^{100}$ valuations. This is practically impossible.
+
+\subsection*{Example}
+5 identical items\\
+9 agents\\
+unit demand: there is only a valuation for 1 item, marginal valuation for a 2\textsuperscript{nd} item is 0.
+
+\begin{equation*}
+    \begin{aligned}
+     &v_1=15&*\\
+    **\quad &v_2=7&\\
+    **\quad &v_3=10&*\\
+    **\quad &v_4=12&*\\
+    &v_5=5&\\
+    &v_6=6&\\
+    &v_7=3&\\
+    **\quad&v_8=13&*\\
+    **\quad&v_9=8&*
+    \end{aligned}
+\end{equation*}\\
+
+\noindent
+$p_1=13+12+10+8+7-(13+12+10+8)=7$, pay the highest excluded bid. Similarly, $p_3=p_4=p_8=p_9=7$.\\
+
+\noindent
+Note: with 1 item this is equivalent to the Vickrey auction.
+
+\section*{2\quad Competitive Equilibrium and the Welfare Theorem}
+Exchange economy: trade without production\\
+Consider economy with trade and production.
+
+\noindent
+2 consumers, 1 firm\\
+2 goods: wheat and beer\\
+
+\noindent
+Firm 1 produces beer from wheat: $f(w)=\sqrt{w}$\\
+
+\noindent
+Consumer 1 has utility $u(w,b)=w\cdot b$\\
+Initial endowment: None, owns firm\\
+
+\noindent
+Consumer 2 has utility $v(w,b)=w\cdot b^2$\\
+Initial endowment: owns 2 units of wheat\\
+
+\noindent
+Prices: 1 for wheat, $q$ for beer.\\
+
+\noindent
+Three equilibrium concepts that are the same:
+\begin{itemize}
+    \item competitive equilibrium
+    \item Walrasian equilibrium
+    \item price equilibrium
+\end{itemize}
+
+\noindent
+Assume a price-taker model. We are going to check whether these prices are equilibrium prices.\\
+
+\noindent
+Currently both consumers have 0 utility, so they both have incentive to start trading.\\
+
+\noindent
+\textbf{C2} sells his wheat and buys beer with that money. Assume he sells all of his wheat. His budget is now 2.
+
+\begin{equation*}
+    \begin{aligned}
+        \max\quad &v(w,b)=w\cdot b^2\\
+        \text{subject to:}\quad&w + q\cdot b = 2\quad\text{(non-satiation, so equality)}
+    \end{aligned}
+\end{equation*}\\
+
+\noindent
+Using Lagrange: $\mathcal{L}=w\cdot b^2-\lambda(w+q\cdot b-2)$
+
+\begin{equation*}
+    \left.
+    \begin{aligned}
+        \frac{\partial \mathcal{L}}{\partial w}&=b^2-\lambda&=0\\ \\
+        \frac{\partial \mathcal{L}}{\partial b}&=2wb-\lambda q&=0
+    \end{aligned}
+    \quad
+    \right]
+    \begin{aligned}
+        &\times q\\
+        &\\
+        &\\
+        &\\
+    \end{aligned}
+    \quad\quad\implies
+    \begin{aligned}
+    &\\
+    q\cdot b^2&=2wb\\
+    q\cdot b &= 2w
+    &\\
+    \end{aligned}
+\end{equation*}
+Using the constraint $w+q\cdot b=2$ we get for consumer 2 $b=\frac{4}{3q}$ and $w=\frac{2}{3}$. This is his demand function.\\
+
+\noindent
+\textbf{C1} has only technology, no initial endowments. He operates the firm, wants to maximize profit
+\begin{equation*}
+    \begin{aligned}
+    \max\quad&\Pi_f=q\cdot b-w\\
+    \text{subject to:}\quad&b=\sqrt{w}\quad\text{(non-satiation)}
+    \end{aligned}
+\end{equation*}
+By substitution,
+\begin{equation*}
+    \max\quad q\cdot\sqrt{w}-w
+\end{equation*}
+First order condition:
+\begin{equation*}
+    \frac{\d \Pi_f}{\d w}=-\frac{q}{2\sqrt{w}}-1=0\iff w=\frac{q^2}{4}
+\end{equation*}
+Then, $b=\sqrt{\frac{q^2}{4}}=\frac{q}{2}$. The resulting profit is then $\Pi_f=q\cdot b - w = \frac{q^2}{2}-\frac{q^2}{4}=\frac{q^2}{4}$. This is the budget consumer 1 goes to market with.\\
+
+\noindent
+He wishes to maximize utility
+\begin{equation*}
+    \begin{aligned}
+        \max\quad&u(w,b)=w\cdot b\\
+        \text{subject to:}\quad&w+q\cdot b = \frac{q^2}{4}
+    \end{aligned}
+\end{equation*}
+This is equivalent to
+\begin{equation*}
+    \max_b\quad\left(\frac{q^2}{4}-q\cdot b\right)\cdot b
+\end{equation*}
+The maximum is halfway between the roots, so $b=\frac{1}{2}\cdot\frac{q}{4}=\frac{q}{8}$. Then $w=\frac{q^2}{4}-\frac{q^2}{8}=\frac{q^2}{8}$.
+
+\subsection*{Competitive Equilibrium}
+$(1,q)$ is a competitive equilibrium if the market clears, i.e. total supply must equal to total demand for all goods.
+\begin{equation*}
+\begin{aligned}
+    TS_w&=TD_w\\
+    TS_b&=TD_b
+\end{aligned}
+\end{equation*}
+For beer:
+\begin{equation*}
+    \begin{aligned}
+        TS_b&=TD_b\\
+        \frac{q}{2}&=\frac{q}{8}+\frac{4}{3q}\\
+        \frac{3q^2}{8}&=\frac{4}{3}\\
+        q^2&=\frac{32}{9}\\
+        q&=\frac{4}{3}\cdot\sqrt{2}
+    \end{aligned}
+\end{equation*}
+For wheat:
+\begin{equation*}
+    \begin{aligned}
+        TS_w&=TD_w\\
+        2&=\frac{2}{3}+\frac{q^2}{8}+\frac{q^2}{4}\\
+        q&=\frac{4}{3}\cdot\sqrt{2}
+    \end{aligned}
+\end{equation*}
+The market clears for this $q$. We get the same answer for $q$ for the market clearing condition with both beer and wheat.
+\subsection*{Welfare Theorem}
+In the competitive equilibrium, the outcomes (utilities) are Pareto efficient.
+
+\begin{equation*}
+    \begin{aligned}
+        \text{C1, in equilibrium:}\quad& w=\frac{4}{9},\,&b=\frac{\sqrt{2}}{6}&\text{ gives }u=\frac{4}{9}\cdot\frac{\sqrt{2}}{6}=\frac{2}{27}\sqrt{2}\\
+        \text{C2, in equilibrium:}\quad& w=\frac{2}{3},\,&b=\frac{1}{\sqrt{2}}&\text{ gives }v=\frac{2}{3}\cdot\left(\frac{1}{\sqrt{2}}\right)^2=\frac{1}{3}
+    \end{aligned}
+\end{equation*}
+
+\subsection*{Note}
+This is completely different from the TU maximizer, if we wanted to do that it would look like
+\begin{equation*}
+    \begin{aligned}
+        \max\quad&w_1\cdot b_1+w_2\cdot b_2^2\\
+        \text{such that:}\quad&b_1+b_2=b_f\\
+        &b_f=\sqrt{w_f}\\
+        &w_1+w_2+w_f=2
+    \end{aligned}
+\end{equation*}
+There are no prices, only the distribution is a problem. This is "communism".
+\end{document}
